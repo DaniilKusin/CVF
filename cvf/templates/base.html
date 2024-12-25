@@ -23,12 +23,12 @@
     </div>
     <nav>
         <ul>
-            <li><a href="#"><img src="{% static 'images/icons/bars.svg' %}" alt="Фильтры" class="filter-icon">
+            <li><a href="{% url 'filter' %}"><img src="{% static 'images/icons/bars.svg' %}" alt="Фильтры" class="filter-icon">
                 Фильтры</a></li>
         </ul>
     </nav>
     <div class="icons">
-        <a href="#"><img src="{% static 'images/icons/help.svg' %}" alt="Help"></a>
+        <a href="{% url 'info' %}"><img src="{% static 'images/icons/help.svg' %}" alt="Info"></a>
         <a href="{% url 'user_profile' %}"><img src="{% static 'images/icons/user.svg' %}" alt="User"></a>
     </div>
 </header>

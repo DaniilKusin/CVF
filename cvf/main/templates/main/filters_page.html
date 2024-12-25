@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Фильтры{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'main/css/filters.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="filters-container">
+    <div class="filter">
+        <div class="filter-info">
+            <h2>Бинаризация</h2>
+            <p>Позволяет перевести исходное изображение в палитру из двух цветов, один из которых соответствует
+                логической 1, другой - 0.</p>
+            <button type="button" class="main-btn" onclick="window.location.href='{% url 'binarization' %}'">
+                Опробовать
+            </button>
+        </div>
+        <div class="filter-image">
+            <img src="{% static 'images/tree_binarization.jpg' %}" alt="Бинаризация">
+        </div>
+    </div>
+
+    <div class="filter">
+        <div class="filter-info">
+            <h2>Размытие по Гауссу</h2>
+            <p>Позволяет уменьшить шумы на изображении и снизить детализацию. Зачастую применяется для предобработки
+                изображения в различных алгоритмах компьютерного зрения.</p>
+            <button type="button" class="main-btn" onclick="window.location.href='{% url 'gaussian_blur' %}'">Опробовать
+            </button>
+        </div>
+        <div class="filter-image">
+            <img src="{% static 'images/tree_binary_gaussian.jpg' %}" alt="Размытие по Гауссу">
+        </div>
+    </div>
+
+    <div class="filter">
+        <div class="filter-info">
+            <h2>Оператор Кэнни</h2>
+            <p>Также зачастую называется детектором границ Кэнни. Позволяет обнаружить широкий спектр границ на
+                изображении.</p>
+            <button type="button" class="main-btn" onclick="window.location.href='{% url 'canny' %}'">Опробовать
+            </button>
+        </div>
+        <div class="filter-image">
+            <img src="{% static 'images/tree_binary_edge.jpg' %}" alt="Оператор Кэнни">
+        </div>
+    </div>
+</div>
+{% endblock %}

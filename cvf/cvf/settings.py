@@ -133,4 +133,8 @@ LOGIN_URL = '/main/login/'  # Страница входа
 LOGIN_REDIRECT_URL = '/main/profile/'  # Куда перенаправлять после входа
 LOGOUT_REDIRECT_URL = '/'  # Куда перенаправлять после выхода
 
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB
 
+MEDIA_URL = '/media/'  # URL для доступа к медиафайлам
+MEDIA_ROOT = BASE_DIR / 'media'  # Путь на диске для хранения файлов

@@ -1,0 +1,109 @@
+{% extends 'filter/layout.html' %}
+{% load static %}
+
+{% block filter_settings %}
+<h2>Настройки бинаризации</h2>
+
+<form id="binarization-form" method="post">
+    {% csrf_token %}
+    <!-- Порог бинаризации -->
+    <div class="filter-settings">
+        <label for="threshold">Порог бинаризации:</label>
+        <div>
+            <input type="range" id="threshold" name="threshold" min="0" max="255" value="127">
+            <span id="threshold-value">127</span>
+        </div>
+    </div>
+
+    <!-- Размер блока для адаптивной бинаризации -->
+    <div class="filter-settings">
+        <label for="block-size">Размер матрицы:</label>
+        <div>
+            <input type="range" id="block-size" name="block_size" min="3" max="25" value="3" step="2">
+            <span id="block-size-value">3</span>
+        </div>
+
+    </div>
+
+    <!-- Константа для адаптивной бинаризации -->
+    <div class="filter-settings">
+        <label for="constant">Константа:</label>
+        <div>
+            <input type="range" id="constant" name="constant" min="0" max="50" value="10">
+            <span id="constant-value">10</span>
+        </div>
+
+    </div>
+
+    <div class="form-actions">
+        <button type="button" id="process-button" class="main-btn">Обработать</button>
+    </div>
+</form>
+
+<script>
+    // Функция для обновления значений в span при изменении ползунков
+    function updateSliderValue(sliderId, value) {
+        document.getElementById(sliderId).textContent = value;
+    }
+
+    // Добавляем обработчики для каждого ползунка
+    document.getElementById('threshold').addEventListener('input', function() {
+        updateSliderValue('threshold-value', this.value);
+    });
+
+    document.getElementById('block-size').addEventListener('input', function() {
+        updateSliderValue('block-size-value', this.value);
+    });
+
+    document.getElementById('constant').addEventListener('input', function() {
+        updateSliderValue('constant-value', this.value);
+    });
+    const csrfToken = '{{ csrf_token }}';
+
+    document.getElementById('process-button').addEventListener('click', function() {
+        let canvas = document.getElementById('filter-image');
+        let ctx = canvas.getContext('2d');
+        let imageData = canvas.toDataURL('image/jpeg');  // Преобразуем в Base64 строку
+
+        // Считываем значения из полей настроек
+        let thresholdValue = document.getElementById('threshold').value;
+        let blockSizeValue = document.getElementById('block-size').value;
+        let constantValue = document.getElementById('constant').value;
+
+        // Если изображение было загружено, отправляем его
+        let data = {
+            image: originalImage,  // Отправляем сохраненное изображение
+            threshold: thresholdValue,
+            block_size: blockSizeValue,
+            constant: constantValue
+        };
+
+        fetch('process_binarization/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.image) {
+                let imgElement = new Image();
+                imgElement.src = 'data:image/jpeg;base64,' + data.image;
+
+                imgElement.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                };
+            } else {
+                console.error('Ошибка обработки изображения:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+    });
+</script>
+
+{% endblock %}

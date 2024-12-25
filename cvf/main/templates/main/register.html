@@ -6,47 +6,51 @@
     <link rel="stylesheet" href="{% static 'main/css/register.css' %}">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const form = document.querySelector('form');
-            const usernameInput = document.querySelector('input[name="username"]');
-            const password1Input = document.querySelector('input[name="password1"]');
-            const password2Input = document.querySelector('input[name="password2"]');
-            const errorMessages = document.createElement('div');
-            errorMessages.classList.add('error-messages');
+    const form = document.querySelector('form');
+    const usernameInput = document.querySelector('input[name="username"]');
+    const password1Input = document.querySelector('input[name="password1"]');
+    const password2Input = document.querySelector('input[name="password2"]');
+    const errorMessages = document.createElement('div');
+    errorMessages.classList.add('error-messages');
 
-            // Вставляем контейнер для ошибок
-            form.insertBefore(errorMessages, form.querySelector('button'));
+    // Вставляем контейнер для ошибок
+    form.insertBefore(errorMessages, form.querySelector('button'));
 
-            form.addEventListener('submit', function (event) {
-                let errors = [];
+    form.addEventListener('submit', function (event) {
+        let errors = [];
 
-                // Проверка имени пользователя
-                if (usernameInput.value.length < 5) {
-                    errors.push('Имя пользователя должно быть не менее 5 символов.');
-                }
-                if (!/^[a-zA-Z0-9_]+$/.test(usernameInput.value)) {
-                    errors.push('Имя пользователя может содержать только буквы, цифры и нижние подчеркивания.');
-                }
+        // Проверка имени пользователя
+        if (usernameInput.value.length < 5) {
+            errors.push('Имя пользователя должно быть не менее 5 символов.');
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(usernameInput.value)) {
+            errors.push('Имя пользователя может содержать только буквы, цифры и нижние подчеркивания.');
+        }
 
-                // Проверка пароля
-                if (password1Input.value.length < 8) {
-                    errors.push('Пароль должен быть не менее 8 символов.');
-                }
-                if (password1Input.value !== password2Input.value) {
-                    errors.push('Пароли не совпадают.');
-                }
+        // Проверка пароля
+        if (password1Input.value.length < 8) {
+            errors.push('Пароль должен быть не менее 8 символов.');
+        }
+        if (password1Input.value !== password2Input.value) {
+            errors.push('Пароли не совпадают.');
+        }
 
-                // Если есть ошибки, предотвратить отправку формы
-                if (errors.length > 0) {
-                    event.preventDefault();
-                    errorMessages.innerHTML = ''; // Очистить предыдущие ошибки
-                    errors.forEach(function (error) {
-                        const errorElement = document.createElement('p');
-                        errorElement.textContent = error;
-                        errorMessages.appendChild(errorElement);
-                    });
-                }
+        // Если есть ошибки, предотвратить отправку формы
+        if (errors.length > 0) {
+            event.preventDefault();
+            errorMessages.innerHTML = ''; // Очистить предыдущие ошибки
+            errors.forEach(function (error) {
+                const errorElement = document.createElement('p');
+                errorElement.textContent = error;
+                errorMessages.appendChild(errorElement);
             });
-        });
+            errorMessages.classList.add('active'); // Показать ошибки
+        } else {
+            errorMessages.classList.remove('active'); // Скрыть ошибки, если их больше нет
+        }
+    });
+});
+
     </script>
 {% endblock %}
 
@@ -97,7 +101,7 @@
             {% endif %}
         </div>
 
-        <button type="submit">Зарегистрироваться</button>
+        <button class='main-btn'  type="submit">Зарегистрироваться</button>
     </form>
 
     <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>

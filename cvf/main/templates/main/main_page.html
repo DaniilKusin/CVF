@@ -2,14 +2,14 @@
 {% load static %}
 {% block title %}Главная страница{% endblock %}
 {% block head %}
-    <link rel="stylesheet" href="{% static 'main/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/main_page.css' %}">
 {% endblock %}
 {% block content %}
 <section class="example-section">
     <h1>Пример обработки</h1>
     <p>Данное изображение получено с применением пороговой бинаризации.</p>
     <img src="{% static 'images/tree_binarization.jpg' %}" alt="Пример изображения">
-    <button>Опробовать фильтры</button>
+    <button type="button" class="main-btn" onclick="window.location.href='{% url 'filter' %}'">Опробовать</button>
 </section>
 <section class="filters-section">
     <h1>Примеры фильтров</h1>

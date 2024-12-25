@@ -1,0 +1,93 @@
+{% extends 'filter/layout.html' %}
+{% load static %}
+
+{% block filter_settings %}
+<h2>Настройки детектора границ Кэнни</h2>
+
+<form id="canny-edge-detection-form" method="post">
+    {% csrf_token %}
+    <!-- Нижний порог -->
+    <div class="filter-settings">
+        <label for="low-threshold">Нижний порог:</label>
+        <div>
+            <input type="range" id="low-threshold" name="low_threshold" min="0" max="255" value="50">
+            <span id="low-threshold-value">50</span>
+        </div>
+    </div>
+
+    <!-- Верхний порог -->
+    <div class="filter-settings">
+        <label for="high-threshold">Верхний порог:</label>
+        <div>
+            <input type="range" id="high-threshold" name="high_threshold" min="0" max="255" value="150">
+            <span id="high-threshold-value">150</span>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" id="process-button" class="main-btn">Обработать</button>
+    </div>
+</form>
+
+<script>
+    // Функция для обновления значений в span при изменении ползунков
+    function updateSliderValue(sliderId, value) {
+        document.getElementById(sliderId).textContent = value;
+    }
+
+    // Добавляем обработчики для каждого ползунка
+    document.getElementById('low-threshold').addEventListener('input', function() {
+        updateSliderValue('low-threshold-value', this.value);
+    });
+
+    document.getElementById('high-threshold').addEventListener('input', function() {
+        updateSliderValue('high-threshold-value', this.value);
+    });
+
+    const csrfToken = '{{ csrf_token }}';
+
+    document.getElementById('process-button').addEventListener('click', function() {
+        let canvas = document.getElementById('filter-image');
+        let ctx = canvas.getContext('2d');
+        let imageData = canvas.toDataURL('image/jpeg');  // Преобразуем в Base64 строку
+
+        // Считываем значения из полей настроек
+        let lowThresholdValue = document.getElementById('low-threshold').value;
+        let highThresholdValue = document.getElementById('high-threshold').value;
+
+        // Если изображение было загружено, отправляем его
+        let data = {
+            image: originalImage,  // Отправляем сохраненное изображение
+            low_threshold: lowThresholdValue,
+            high_threshold: highThresholdValue
+        };
+
+        fetch('process_canny/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.image) {
+                let imgElement = new Image();
+                imgElement.src = 'data:image/jpeg;base64,' + data.image;
+
+                imgElement.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                };
+            } else {
+                console.error('Ошибка обработки изображения:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+    });
+</script>
+
+{% endblock %}

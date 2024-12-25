@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Фильтр: {{ filter_name|title }}{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'filter/css/filters.css' %}">
+{% endblock %}
+{% block content %}
+<div class="filter-page-container">
+    <div class="left-column">
+        {% block filter_settings %}
+        {% endblock %}
+    </div>
+
+    <div class="right-column">
+        <div class="image-container">
+            <h3>Изображение</h3>
+            <canvas id="filter-image"></canvas> <!-- Здесь мы используем canvas вместо img -->
+        </div>
+        <div class="upload-container">
+            <label for="image-upload" class="main-btn">Загрузить изображение</label>
+            <input type="file" id="image-upload" class="hidden" accept="image/*">
+        </div>
+    </div>
+</div>
+
+<script>
+    let originalImage = null; // Переменная для хранения исходного изображения
+
+    // Загрузить изображение в canvas
+    document.getElementById('image-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            originalImage = e.target.result;  // Сохраняем изображение в формате base64
+            let canvas = document.getElementById('filter-image');
+            let ctx = canvas.getContext('2d');
+            let img = new Image();
+            img.src = originalImage;
+            img.onload = function() {
+                canvas.width = img.width; // Устанавливаем ширину canvas
+                canvas.height = img.height; // Устанавливаем высоту canvas
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            }
+        };
+        reader.readAsDataURL(file);  // Читаем изображение как DataURL
+    });
+</script>
+
+{% endblock %}

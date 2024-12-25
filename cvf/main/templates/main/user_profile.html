@@ -13,7 +13,7 @@
     <!-- Форма для выхода -->
     <form action="{% url 'logout' %}" method="POST">
         {% csrf_token %}
-        <button type="submit">Выйти</button>
+        <button class='main-btn'  type="submit">Выйти</button>
     </form>
 </div>
 {% endblock %}

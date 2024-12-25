@@ -1,0 +1,93 @@
+{% extends 'filter/layout.html' %}
+{% load static %}
+
+{% block filter_settings %}
+<h2>Настройки размытия по Гауссу</h2>
+
+<form id="gaussian-blur-form" method="post">
+    {% csrf_token %}
+    <!-- Размер ядра (матрицы) -->
+    <div class="filter-settings">
+        <label for="kernel-size">Размер ядра:</label>
+        <div>
+            <input type="range" id="kernel-size" name="kernel_size" min="3" max="25" value="5" step="2">
+            <span id="kernel-size-value">5</span>
+        </div>
+    </div>
+
+    <!-- Стандартное отклонение -->
+    <div class="filter-settings">
+        <label for="sigma">Стандартное отклонение (σ):</label>
+        <div>
+            <input type="range" id="sigma" name="sigma" min="0" max="50" value="1">
+            <span id="sigma-value">1</span>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" id="process-button" class="main-btn">Обработать</button>
+    </div>
+</form>
+
+<script>
+    // Функция для обновления значений в span при изменении ползунков
+    function updateSliderValue(sliderId, value) {
+        document.getElementById(sliderId).textContent = value;
+    }
+
+    // Добавляем обработчики для каждого ползунка
+    document.getElementById('kernel-size').addEventListener('input', function() {
+        updateSliderValue('kernel-size-value', this.value);
+    });
+
+    document.getElementById('sigma').addEventListener('input', function() {
+        updateSliderValue('sigma-value', this.value);
+    });
+
+    const csrfToken = '{{ csrf_token }}';
+
+    document.getElementById('process-button').addEventListener('click', function() {
+        let canvas = document.getElementById('filter-image');
+        let ctx = canvas.getContext('2d');
+        let imageData = canvas.toDataURL('image/jpeg');  // Преобразуем в Base64 строку
+
+        // Считываем значения из полей настроек
+        let kernelSizeValue = document.getElementById('kernel-size').value;
+        let sigmaValue = document.getElementById('sigma').value;
+
+        // Если изображение было загружено, отправляем его
+        let data = {
+            image: originalImage,  // Отправляем сохраненное изображение
+            kernel_size: kernelSizeValue,
+            sigma: sigmaValue
+        };
+
+        fetch('process_gaussian_blur/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.image) {
+                let imgElement = new Image();
+                imgElement.src = 'data:image/jpeg;base64,' + data.image;
+
+                imgElement.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                };
+            } else {
+                console.error('Ошибка обработки изображения:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+        });
+    });
+</script>
+
+{% endblock %}
