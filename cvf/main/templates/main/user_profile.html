@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Профиль{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'main/css/register.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Профиль</h2>
+    <p>Добро пожаловать, {{ user.username }}!</p>
+
+    <!-- Форма для выхода -->
+    <form action="{% url 'logout' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
+</div>
+{% endblock %}

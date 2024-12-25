@@ -26,6 +26,11 @@ header {
     font-size: 1.8rem;
 }
 
+.logo a {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: black; /* Черный цвет текста */
+}
+
 .logo img {
     height: 60px;
     margin-right: 5px;
