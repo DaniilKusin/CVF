@@ -37,11 +37,46 @@
     {% block content %}{% endblock %}
 </main>
 
+<div id="toast-container"></div>
+{% if messages %}
+<script>
+    const toastContainer = document.getElementById('toast-container');
+    {% for message in messages %}
+    const toast = document.createElement('div');
+    toast.className = 'toast {{ message.tags }}';
+    toast.innerText = "{{ message|escapejs }}";
+    toastContainer.appendChild(toast);
+
+    // Удаление сообщения через 5 секунд
+    setTimeout(() => toast.remove(), 5000);
+    {% endfor %}
+</script>
+{% endif %}
+
+
 <footer>
     <div class="contact-info">
         <p>Phone: 123-456-7890</p>
         <p>Email: email@gmail.com</p>
     </div>
 </footer>
+<script>
+    function showToast(message, type = 'info') {
+        const toastContainer = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerText = message;
+
+        toastContainer.appendChild(toast);
+
+        // Удаление сообщения через 5 секунд
+        setTimeout(() => toast.remove(), 5000);
+    }
+
+    // Пример использования:
+    // showToast('Это сообщение об успехе!', 'success');
+    // showToast('Это сообщение об ошибке!', 'error');
+</script>
+
 </body>
 </html>
