@@ -43,27 +43,18 @@
 
 .upload-container {
     text-align: center;
+    margin: 10px;
 }
 
 .upload-container input[type="file"] {
     display: none;
 }
 
-.upload-container label {
-    padding: 10px 20px;
-    background-color: #4f7dad;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1em;
-}
 
-.upload-container label:hover {
-    background-color: #3c6f8f;
+.save-container {
+    text-align: center;
+    margin: 10px;
 }
-
 canvas {
     width: 500px;  /* Ширина 100% контейнера */
     height: auto; /* Автоматическая высота для сохранения пропорций */

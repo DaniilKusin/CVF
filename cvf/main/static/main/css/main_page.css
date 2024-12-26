@@ -1,4 +1,4 @@
-
+/* Основной стиль */
 .example-section {
     flex: 1;
     text-align: center;
@@ -11,11 +11,32 @@
     margin: 20px 0;
 }
 
-
 .filters-section {
     flex: 1;
 }
 
 .filter {
     margin-bottom: 20px;
+}
+
+/* Адаптивный стиль для экранов до 768px */
+@media (max-width: 768px) {
+    main {
+    display: block;
+    }
+
+    .example-section,
+    .filters-section {
+        margin-right: 0; /* Убираем отступ справа */
+        margin-bottom: 20px; /* Добавляем отступ снизу */
+    }
+
+    .example-section,
+    .filters-section {
+        display: block; /* Ставим элементы в столбик */
+    }
+
+    .example-section img {
+        margin: 10px auto; /* Уменьшаем отступы и центрируем */
+    }
 }

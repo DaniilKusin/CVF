@@ -31,6 +31,11 @@ header {
     color: black; /* Черный цвет текста */
 }
 
+#logo a {
+    text-decoration: none; /* Убираем подчеркивание */
+    color: black; /* Черный цвет текста */
+}
+
 .logo img {
     height: 60px;
     margin-right: 5px;
@@ -99,6 +104,7 @@ footer p {
 
 .main-btn {
     padding: 10px 20px;
+    margin: 10px;
     background-color: #4f7dad;
     color: white;
     border: none;

@@ -3,7 +3,7 @@
 
 {% block title %}Фильтр: {{ filter_name|title }}{% endblock %}
 {% block head %}
-    <link rel="stylesheet" href="{% static 'filter/css/filters.css' %}">
+<link rel="stylesheet" href="{% static 'filter/css/filters.css' %}">
 {% endblock %}
 {% block content %}
 <div class="filter-page-container">
@@ -18,14 +18,22 @@
             <canvas id="filter-image"></canvas> <!-- Здесь мы используем canvas вместо img -->
         </div>
         <div class="upload-container">
-            <label for="image-upload" class="main-btn">Загрузить изображение</label>
+            <button class="main-btn" id="upload-button">Загрузить изображение</button>
             <input type="file" id="image-upload" class="hidden" accept="image/*">
+        </div>
+
+        <div class="save-container">
+            <button class="main-btn" id="save-image-btn">Сохранить изображение</button>
         </div>
     </div>
 </div>
 
 <script>
     let originalImage = null; // Переменная для хранения исходного изображения
+
+    document.getElementById('upload-button').addEventListener('click', function() {
+        document.getElementById('image-upload').click();
+    });
 
     // Загрузить изображение в canvas
     document.getElementById('image-upload').addEventListener('change', function(event) {
@@ -47,6 +55,45 @@
         };
         reader.readAsDataURL(file);  // Читаем изображение как DataURL
     });
+
+    // Сохранение изображения
+    document.getElementById('save-image-btn').addEventListener('click', function() {
+        const canvas = document.getElementById('filter-image');
+        if (!canvas) {
+            alert("Сначала загрузите изображение.");
+            return;
+        }
+
+        const dataURL = canvas.toDataURL('image/png'); // Конвертируем canvas в изображение
+        const description = prompt("Введите описание изображения (необязательно):", "");
+
+        // Отправляем изображение на сервер
+        fetch("{% url 'save_image' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                image: dataURL,
+                description: description
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Не удалось сохранить изображение.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Изображение успешно сохранено!");
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Ошибка при сохранении изображения.");
+        });
+    });
 </script>
+
 
 {% endblock %}

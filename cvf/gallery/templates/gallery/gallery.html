@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Галерея{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'gallery/css/gallery.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="gallery-container">
+    <h2>Галерея</h2>
+
+    <div class="image-gallery">
+        {% for image in images %}
+            <div class="image-card">
+                <img src="{{ image.image.url }}" alt="{{ image.description }}" class="gallery-image" onclick="openModal(this)">
+                <div class="image-actions">
+                    <a href="{% url 'delete_image' image.id %}" class="delete-icon" onclick="return confirm('Вы уверены, что хотите удалить это изображение?');">Удалить</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Модальное окно для увеличенного изображения -->
+<div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption"></div>
+</div>
+<script>
+    // Функция для открытия модального окна
+    function openModal(imgElement) {
+        var modal = document.getElementById("imageModal");
+        var modalImage = document.getElementById("modalImage");
+        var captionText = document.getElementById("caption");
+
+        // Устанавливаем изображение и описание в модальном окне
+        modal.style.display = "block";
+        modalImage.src = imgElement.src; // Источник изображения
+        captionText.innerHTML = imgElement.alt; // Описание изображения
+    }
+
+    // Функция для закрытия модального окна
+    function closeModal() {
+        var modal = document.getElementById("imageModal");
+        modal.style.display = "none";
+    }
+
+    // Добавляем обработчик клика для картинок
+    document.querySelectorAll('.gallery-image').forEach(img => {
+        img.addEventListener('click', function() {
+            openModal(this); // Открываем модальное окно с изображением
+        });
+    });
+
+    // Закрытие модального окна, если кликнули вне его (по фону)
+    var modal = document.getElementById("imageModal");
+    modal.addEventListener('click', function(event) {
+        // Если клик был на фоне, а не на изображении, закрываем модальное окно
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Закрытие модального окна при нажатии клавиши "Esc"
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    });
+</script>
+
+
+{% endblock %}
