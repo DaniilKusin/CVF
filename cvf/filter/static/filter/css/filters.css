@@ -59,3 +59,8 @@ canvas {
     width: 500px;  /* Ширина 100% контейнера */
     height: auto; /* Автоматическая высота для сохранения пропорций */
 }
+
+.download-container {
+    text-align: center;
+    margin: 10px;
+}

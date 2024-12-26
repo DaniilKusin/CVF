@@ -17,3 +17,6 @@ class UserImage(models.Model):
 
     def __str__(self):
         return f"Image by {self.user.username} ({self.uploaded_at})"
+
+    def filename(self):
+        return self.image.name.split('/')[-1]  # Возвращает имя файла

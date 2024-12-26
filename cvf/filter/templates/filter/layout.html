@@ -25,6 +25,9 @@
         <div class="save-container">
             <button class="main-btn" id="save-image-btn">Сохранить изображение</button>
         </div>
+        <div class="download-container">
+            <button class="main-btn" id="download-image-btn">Скачать изображение</button>
+        </div>
     </div>
 </div>
 
@@ -92,6 +95,19 @@
             console.error(error);
             alert("Ошибка при сохранении изображения.");
         });
+    });
+    document.getElementById('download-image-btn').addEventListener('click', function() {
+    const canvas = document.getElementById('filter-image');
+    if (!canvas) {
+        alert("Сначала загрузите изображение.");
+        return;
+    }
+
+    // Создаем ссылку для скачивания
+    const link = document.createElement('a');
+    link.download = 'filtered-image.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
     });
 </script>
 
